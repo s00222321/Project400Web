@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Image from "next/image";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +27,45 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F5F5F5] text-gray-900`}
       >
-        {children}
+        {/* Header */}
+        <header className="flex items-center justify-between p-4 bg-[#5C9DF5] text-white shadow-md">
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <Image
+              src="/logo.png"
+              alt="Touch&Response Logo"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+            <h1 className="text-2xl font-bold tracking-wide">Touch & Response</h1>
+          </Link>
+
+          {/* Placeholder for Future Navigation */}
+          <nav>
+            <ul className="flex space-x-6">
+              <li>
+                <Link href="/settings" className="hover:text-[#FFA76E] transition-colors">
+                  Settings
+                </Link>
+              </li>
+              <li>
+                <Link href="/login" className="hover:text-[#FFA76E] transition-colors">
+                  Log Out
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </header>
+
+        {/* Main Content */}
+        <main className="p-6">{children}</main>
+
+        {/* Footer */}
+        <footer className="bg-[#5C9DF5] text-white text-center p-4 mt-8">
+          <p>&copy; 2025 Touch & Response. All rights reserved.</p>
+        </footer>
       </body>
     </html>
   );
