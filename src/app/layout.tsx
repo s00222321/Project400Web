@@ -25,9 +25,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F5F5F5] text-gray-900`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F5F5F5] text-gray-900 h-full flex flex-col`}
       >
         {/* Header */}
         <header className="flex items-center justify-between p-4 bg-[#5C9DF5] text-white shadow-md">
@@ -59,11 +59,11 @@ export default function RootLayout({
           </nav>
         </header>
 
-        {/* Main Content */}
-        <main className="p-6">{children}</main>
+        {/* Main Content (flex-grow pushes the footer to the bottom) */}
+        <main className="flex-grow p-6">{children}</main>
 
-        {/* Footer */}
-        <footer className="bg-[#5C9DF5] text-white text-center p-4 mt-8">
+        {/* Sticky Footer */}
+        <footer className="bg-[#5C9DF5] text-white text-center p-4">
           <p>&copy; 2025 Touch & Response. All rights reserved.</p>
         </footer>
       </body>
