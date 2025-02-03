@@ -2,11 +2,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { registerTherapist, login } from "@/services/apiService"; // Adjust the import path as needed
+import { useAuth } from "@/context/authContext";
+import { registerTherapist, loginTherapist } from "@/services/authService";
 
 export default function RegisterPage() {
   const router = useRouter();
 
+  const { setIsLoggedIn, setToken } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,10 +43,12 @@ export default function RegisterPage() {
       const therapist = await registerTherapist(username, password, email);
       setSuccess("Registration successful! You can now log in.");
       console.log("Registered:", therapist);
-      const loginResponse = await login(username, password);
+      const loginResponse = await loginTherapist(username, password);
       if ("error" in loginResponse) {
         setError(loginResponse.error);
       } else {
+        setToken(loginResponse.token);
+        setIsLoggedIn(true);
         router.push("/dashboard"); // Redirect to dashboard on success
       }
     } catch (err) {

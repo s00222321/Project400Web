@@ -1,29 +1,35 @@
 "use client";
 import { useState } from "react";
+import { useAuth } from "@/context/authContext";
 import Link from "next/link";
-import { login } from "@/services/apiService";
+import { loginTherapist } from "@/services/authService";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { setIsLoggedIn, setToken, token, isLoggedIn } = useAuth();
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(""); // Reset previous errors
+    setError(""); // reset previous errors
     setIsLoading(true);
 
-    const result = await login(username, password);
+    const result = await loginTherapist(username, password);
 
     if ("error" in result) {
-        setError(result.error); // Display error in the UI
+        setError(result.error); // display error in the UI
         setIsLoading(false);
         return;
     }
 
     console.log("Logged in! Token: ", result.token);
-    window.location.href = "/dashboard"; // Redirect after successful login
+    setToken(result.token);
+    setIsLoggedIn(true);
+    router.push("/dashboard"); // redirect after successful login
 };
 
   return (

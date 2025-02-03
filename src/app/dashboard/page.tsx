@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ProtectedRoute from "@/components/protectedRoute";
 
 interface Preferences {
   hand: string;
@@ -45,6 +46,7 @@ export default function Dashboard() {
   if (loading) return <p className="text-center text-gray-600">Loading patients...</p>;
 
   return (
+    <ProtectedRoute>
     <div className="min-h-screen p-8 bg-gray-100">
       {/* Header */}
       <header className="mb-6 flex justify-between items-center">
@@ -66,5 +68,6 @@ export default function Dashboard() {
         ))}
       </main>
     </div>
+    </ProtectedRoute>
   );
 }
