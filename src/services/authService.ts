@@ -7,13 +7,6 @@ export interface Therapist {
     email: string;
 }
 
-export interface User {
-    _id: string;
-    name: string;
-    email: string;
-    therapistId: string;
-}
-
 export interface LoginResponse {
     token: string;
     therapist: Therapist;

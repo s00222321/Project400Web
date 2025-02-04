@@ -62,7 +62,7 @@ export default function RegisterPage() {
     <div className="flex justify-center items-center min-h-screen bg-[#F5F5F5]">
       <div className="bg-white p-8 rounded-md shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-semibold text-center text-[#5C9DF5] mb-6">
-          Create a Touch&Response Account
+          Create a Touch & Response Account
         </h2>
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
