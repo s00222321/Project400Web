@@ -1,27 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Line } from "react-chartjs-2";
 import { fetchActions } from "@/services/apiService";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-interface Preferences {
-  hand: string;
-  calibration: number;
-}
-
 interface User {
   _id: string;
   username: string;
-  preferences: Preferences;
+  preferences: { hand: string };
 }
 
 interface Action {
   _id: string;
   reactionTime: number;
   finger: string;
-  hand: string;
-  gameMode: string;
   timestamp: string;
 }
 
@@ -32,98 +25,35 @@ interface Props {
 
 export default function PatientStatsModal({ patient, onClose }: Props) {
   const [actions, setActions] = useState<Action[]>([]);
-  const [filteredActions, setFilteredActions] = useState<Action[]>([]); // State for filtered actions
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
-  const [selectedFinger, setSelectedFinger] = useState<string>("Index"); // Default selected finger
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedFinger, setSelectedFinger] = useState("Index");
 
   useEffect(() => {
-    const fetchPatientActions = async () => {
-      try {
-        const response = await fetchActions(patient._id);
-        setActions(response.data);
-        setFilteredActions(response.data); // Initially, no filter applied
-        setLoading(false);
-      } catch (err) {
-        setError("Failed to load actions.");
-        setLoading(false);
-      }
-    };
-
-    fetchPatientActions();
+    fetchActions(patient._id)
+      .then((res) => setActions(res.data))
+      .catch(() => setError("Failed to load actions."))
+      .finally(() => setLoading(false));
   }, [patient._id]);
 
-  // Handle finger filter change
-  const handleFingerChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = event.target.value;
-    setSelectedFinger(selected);
+  const filteredActions = actions.filter((a) => a.finger === selectedFinger);
+  
+  const chartData = useMemo(() => ({
+    labels: filteredActions.map((a) => new Date(a.timestamp).toLocaleString()),
+    datasets: [{
+      label: `${selectedFinger} Finger Reaction Time`,
+      data: filteredActions.map((a) => a.reactionTime),
+      borderColor: "rgba(75,192,192,1)",
+      tension: 0.1,
+    }],
+  }), [filteredActions, selectedFinger]);
 
-    // Filter actions by the selected finger
-    const filtered = actions.filter((action) => action.finger === selected);
-    setFilteredActions(filtered);
-  };
-
-  // Prepare chart data
-  const chartData = {
-    labels: filteredActions.map((action) => new Date(action.timestamp).toLocaleString()),
-    datasets: [
-      {
-        label: `${selectedFinger} Finger Reaction Time`,
-        data: filteredActions.map((action) => action.reactionTime),
-        fill: false,
-        borderColor: "rgba(75,192,192,1)",
-        tension: 0.1,
-      },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      tooltip: {
-        callbacks: {
-          label: (context: any) => {
-            return `${context.dataset.label}: ${context.raw} ms`;
-          },
-        },
-      },
-    },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Timestamp",
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: "Reaction Time (ms)",
-        },
-      },
-    },
-  };
-
-  if (loading) {
+  if (loading || error) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-          <h2 className="text-xl font-bold mb-4">{patient.username}'s Stats</h2>
-          <p className="text-gray-600">Loading data...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-          <h2 className="text-xl font-bold mb-4">{patient.username}'s Stats</h2>
-          <p className="text-gray-600">{error}</p>
+        <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
+          <h2 className="text-xl font-bold">{patient.username}'s Stats</h2>
+          <p className="text-gray-600">{loading ? "Loading data..." : error}</p>
         </div>
       </div>
     );
@@ -131,44 +61,32 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-  <div className="bg-white p-6 rounded-lg shadow-lg max-w-screen-lg w-full flex flex-col items-center"> {/* Added flexbox properties */}
-    <h2 className="text-xl font-bold mb-4 text-center">{patient.username}'s Stats</h2> {/* Centered title */}
-    <p className="text-gray-600 text-center">Affected Limb: {patient.preferences.hand}</p> {/* Centered text */}
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl text-center">
+        <h2 className="text-2xl font-bold mb-4">{patient.username}'s Stats</h2>
+        <p className="text-gray-600 mb-2">Affected Limb: {patient.preferences.hand}</p>
 
-    <h3 className="text-lg font-semibold mt-4 text-center">Reaction Time Over Time</h3> {/* Centered subtitle */}
+        <label className="mt-4 block text-lg font-semibold">
+          Select Finger:
+          <select value={selectedFinger} onChange={(e) => setSelectedFinger(e.target.value)}
+            className="ml-2 p-2 border rounded">
+            {["Index", "Middle", "Ring", "Pinkie"].map((finger) => (
+              <option key={finger} value={finger}>{finger}</option>
+            ))}
+          </select>
+        </label>
 
-    {/* Finger Selection Dropdown */}
-    <div className="mt-4 mb-2 text-center"> {/* Center the dropdown */}
-      <label htmlFor="fingerSelect" className="mr-2">Select Finger:</label>
-      <select
-        id="fingerSelect"
-        value={selectedFinger}
-        onChange={handleFingerChange}
-        className="p-2 border border-gray-300 rounded"
-      >
-        <option value="Index">Index</option>
-        <option value="Middle">Middle</option>
-        <option value="Ring">Ring</option>
-        <option value="Pinkie">Pinkie</option>
-      </select>
-    </div>
+        {filteredActions.length ? (
+          <div className="mt-6 w-full h-[400px]">
+            <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
+          </div>
+        ) : (
+          <p className="text-gray-600 mt-4">No actions found for {selectedFinger} finger.</p>
+        )}
 
-    {filteredActions.length > 0 ? (
-      <div className="mt-2 w-full">
-        <Line data={chartData} options={chartOptions} />
+        <button onClick={onClose} className="mt-6 bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600">
+          Close
+        </button>
       </div>
-    ) : (
-      <p className="text-gray-600 mt-2 text-center">No actions found for the selected finger.</p>
-    )}
-
-    <button
-      onClick={onClose}
-      className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-    >
-      Close
-    </button>
-  </div>
-</div>
-
+    </div>
   );
 }
