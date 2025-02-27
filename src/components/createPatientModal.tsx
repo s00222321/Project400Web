@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react"; 
+import { useState } from "react"; 
 import { registerUser } from "@/services/apiService";
 
 interface PatientModalProps {
@@ -41,7 +41,7 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
       setPassword("");
       setConfirmPassword("");
       onClose();
-    } catch (error) {
+    } catch (_error) {
       setError("Registration failed. Please try again.");
     } finally {
       setLoading(false);

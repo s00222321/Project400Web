@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setIsLoggedIn, setToken, token, isLoggedIn } = useAuth();
+  const { setIsLoggedIn, setToken } = useAuth();
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -21,16 +21,16 @@ export default function LoginPage() {
     const result = await loginTherapist(username, password);
 
     if ("error" in result) {
-        setError(result.error); // display error in the UI
-        setIsLoading(false);
-        return;
+      setError(result.error); // display error in the UI
+      setIsLoading(false);
+      return;
     }
 
     console.log("Logged in! Token: ", result.token);
     setToken(result.token);
     setIsLoggedIn(true);
     router.push("/dashboard"); // redirect after successful login
-};
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#F5F5F5]">
@@ -72,9 +72,8 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className={`w-full py-2 mt-4 text-white rounded-md transition-colors ${
-              username && password ? "bg-[#FFA76E] hover:bg-[#1F9F8A]" : "bg-gray-400 cursor-not-allowed"
-            }`}
+            className={`w-full py-2 mt-4 text-white rounded-md transition-colors ${username && password ? "bg-[#FFA76E] hover:bg-[#1F9F8A]" : "bg-gray-400 cursor-not-allowed"
+              }`}
             disabled={!username || !password || isLoading}
           >
             {isLoading ? "Logging in..." : "Login"}
@@ -82,11 +81,12 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-4 text-center">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/register" className="text-[#5C9DF5] hover:underline">
             Register here
           </Link>
         </p>
+
       </div>
     </div>
   );

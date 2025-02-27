@@ -7,6 +7,10 @@ import ProtectedRoute from "@/components/protectedRoute";
 import CreatePatientModal from "@/components/createPatientModal";
 import PatientStatsModal from "@/components/patientStatsModal";
 
+interface DecodedJWT {
+  id:string;
+}
+
 export default function Dashboard() {
   const [patients, setPatients] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +23,7 @@ export default function Dashboard() {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decodedToken: any = jwtDecode(token);
+        const decodedToken = jwtDecode<DecodedJWT>(token);
         setTherapistId(decodedToken.id);
       } catch (error) {
         console.error("Error decoding token:", error);

@@ -37,7 +37,7 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
   }, [patient._id]);
 
   const filteredActions = actions.filter((a) => a.finger === selectedFinger);
-  
+
   const chartData = useMemo(() => ({
     labels: filteredActions.map((a) => new Date(a.timestamp).toLocaleString()),
     datasets: [{
@@ -52,7 +52,7 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
         <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
-          <h2 className="text-xl font-bold">{patient.username}'s Stats</h2>
+          <h2 className="text-xl font-bold">{patient.username}&apos;s Stats</h2>
           <p className="text-gray-600">{loading ? "Loading data..." : error}</p>
         </div>
       </div>
@@ -62,7 +62,7 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl text-center">
-        <h2 className="text-2xl font-bold mb-4">{patient.username}'s Stats</h2>
+        <h2 className="text-2xl font-bold mb-4">{patient.username}&apos;s Stats</h2>
         <p className="text-gray-600 mb-2">Affected Limb: {patient.preferences.hand}</p>
 
         <label className="mt-4 block text-lg font-semibold">
