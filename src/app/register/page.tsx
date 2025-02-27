@@ -51,8 +51,8 @@ export default function RegisterPage() {
         setIsLoggedIn(true);
         router.push("/dashboard"); // Redirect to dashboard on success
       }
-    } catch (_err) {
-      setError("Registration failed. Please try again.");
+    } catch (err) {
+      setError("Registration failed. Please try again." + err);
     } finally {
       setIsSubmitting(false);
     }

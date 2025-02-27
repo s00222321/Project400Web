@@ -41,8 +41,8 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
       setPassword("");
       setConfirmPassword("");
       onClose();
-    } catch (_error) {
-      setError("Registration failed. Please try again.");
+    } catch (error) {
+      setError("Registration failed. Please try again." + error);
     } finally {
       setLoading(false);
     }
