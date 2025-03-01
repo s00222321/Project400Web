@@ -53,7 +53,7 @@ export default function RegisterPage() {
         router.push("/dashboard"); // Redirect on success
       }
     } catch (err) {
-      setError("Registration failed. Please try again.");
+      setError("Registration failed. Please try again." + err);
     } finally {
       setIsSubmitting(false);
     }
