@@ -1,7 +1,18 @@
+"use client";
+
 import React, { useEffect, useState, useMemo } from "react";
 import { Line } from "react-chartjs-2";
 import { fetchActions } from "@/services/apiService";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
+import { 
+  Chart as ChartJS, 
+  CategoryScale, 
+  LinearScale, 
+  PointElement, 
+  LineElement, 
+  Title, 
+  Tooltip, 
+  Legend 
+} from "chart.js";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -40,20 +51,26 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
 
   const chartData = useMemo(() => ({
     labels: filteredActions.map((a) => new Date(a.timestamp).toLocaleString()),
-    datasets: [{
-      label: `${selectedFinger} Finger Reaction Time`,
-      data: filteredActions.map((a) => a.reactionTime),
-      borderColor: "rgba(75,192,192,1)",
-      tension: 0.1,
-    }],
+    datasets: [
+      {
+        label: `${selectedFinger} Finger Reaction Time`,
+        data: filteredActions.map((a) => a.reactionTime),
+        borderColor: "#1e487a",
+        backgroundColor: "rgba(30, 72, 122, 0.2)",
+        borderWidth: 2,
+        tension: 0.2,
+        pointRadius: 4,
+        pointBackgroundColor: "#FFA76E",
+      },
+    ],
   }), [filteredActions, selectedFinger]);
 
   if (loading || error) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-center">
-          <h2 className="text-xl font-bold">{patient.username}&apos;s Stats</h2>
-          <p className="text-gray-600">{loading ? "Loading data..." : error}</p>
+        <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-lg text-center">
+          <h2 className="text-2xl font-bold text-[#042d61]">{patient.username}&apos;s Stats</h2>
+          <p className="text-gray-600 mt-4">{loading ? "Loading data..." : error}</p>
         </div>
       </div>
     );
@@ -61,31 +78,47 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl text-center">
-        <h2 className="text-2xl font-bold mb-4">{patient.username}&apos;s Stats</h2>
-        <p className="text-gray-600 mb-2">Affected Limb: {patient.preferences.hand}</p>
+      <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-2xl transition-transform transform scale-100">
+        <h2 className="text-3xl font-bold text-[#042d61] text-center">{patient.username}&apos;s Stats</h2>
+        <p className="text-gray-600 text-center mt-2">Affected Limb: <span className="font-semibold">{patient.preferences.hand}</span></p>
 
-        <label className="mt-4 block text-lg font-semibold">
-          Select Finger:
-          <select value={selectedFinger} onChange={(e) => setSelectedFinger(e.target.value)}
-            className="ml-2 p-2 border rounded">
-            {["Index", "Middle", "Ring", "Pinkie"].map((finger) => (
-              <option key={finger} value={finger}>{finger}</option>
-            ))}
-          </select>
-        </label>
+        {/* Finger Selection Dropdown */}
+        <div className="mt-6 flex justify-center">
+          <label className="block text-lg font-semibold text-gray-700">
+            Select Finger:
+            <select 
+              value={selectedFinger} 
+              onChange={(e) => setSelectedFinger(e.target.value)}
+              className="ml-2 p-2 border border-gray-300 rounded-lg bg-gray-100 focus:ring-2 focus:ring-blue-500"
+            >
+              {["Index", "Middle", "Ring", "Pinkie"].map((finger) => (
+                <option key={finger} value={finger}>{finger}</option>
+              ))}
+            </select>
+          </label>
+        </div>
 
-        {filteredActions.length ? (
-          <div className="mt-6 w-full h-[400px]">
-            <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
-          </div>
-        ) : (
-          <p className="text-gray-600 mt-4">No actions found for {selectedFinger} finger.</p>
-        )}
+        {/* Chart Display */}
+        <div className="mt-6 w-full h-[350px] bg-gray-100 p-4 rounded-lg">
+          {filteredActions.length ? (
+            <Line 
+              data={chartData} 
+              options={{ responsive: true, maintainAspectRatio: false }}
+            />
+          ) : (
+            <p className="text-gray-600 mt-4 text-center">No actions found for {selectedFinger} finger.</p>
+          )}
+        </div>
 
-        <button onClick={onClose} className="mt-6 bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600">
-          Close
-        </button>
+        {/* Close Button */}
+        <div className="mt-6 flex justify-center">
+          <button 
+            onClick={onClose} 
+            className="bg-[#042d61] text-white px-6 py-3 rounded-lg hover:bg-[#1e487a] transition-all"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );

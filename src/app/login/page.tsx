@@ -15,13 +15,13 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(""); // reset previous errors
+    setError(""); // Reset previous errors
     setIsLoading(true);
 
     const result = await loginTherapist(username, password);
 
     if ("error" in result) {
-      setError(result.error); // display error in the UI
+      setError(result.error);
       setIsLoading(false);
       return;
     }
@@ -29,64 +29,83 @@ export default function LoginPage() {
     console.log("Logged in! Token: ", result.token);
     setToken(result.token);
     setIsLoggedIn(true);
-    router.push("/dashboard"); // redirect after successful login
+    router.push("/dashboard");
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#F5F5F5]">
-      <div className="bg-white p-8 rounded-md shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-semibold text-center text-[#5C9DF5] mb-6">
-          Login to Touch & Response
-        </h2>
+    <div className="flex min-h-screen">
+      {/* Left Section - Login Form */}
+      <div className="w-1/2 flex items-center justify-center bg-white p-12 rounded-lg">
+        <div className="w-full max-w-md">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+          <p className="text-gray-500 mb-6">Please enter your details</p>
 
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label htmlFor="username" className="block text-sm text-gray-700">Username</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md"
-              placeholder="Enter your username"
-              required
-            />
-          </div>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full p-3 mt-1 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your username"
+                required
+              />
+            </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm text-gray-700">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-3 mt-1 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
 
-          <button
-            type="submit"
-            className={`w-full py-2 mt-4 text-white rounded-md transition-colors ${username && password ? "bg-[#FFA76E] hover:bg-[#1F9F8A]" : "bg-gray-400 cursor-not-allowed"
-              }`}
-            disabled={!username || !password || isLoading}
-          >
-            {isLoading ? "Logging in..." : "Login"}
-          </button>
-        </form>
+            <div className="flex justify-between text-sm">
+              <span></span>
+              <p className="mt-4 text-center">
+                Don&apos;t have an account?{" "}
+                <Link href="/register" className="text-[#5C9DF5] hover:underline">
+                  Register here
+                </Link>
+              </p>
+            </div>
 
-        <p className="mt-4 text-center">
-          Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-[#5C9DF5] hover:underline">
-            Register here
-          </Link>
-        </p>
+            <button
+              type="submit"
+              className={`w-full py-3 mt-4 text-white font-medium rounded-md transition-all ${username && password ? "bg-[#042d61] hover:bg-[#1e487a]" : "bg-gray-400 cursor-not-allowed"
+                }`}
+              disabled={!username || !password || isLoading}
+            >
+              {isLoading ? "Logging in..." : "Sign In"}
+            </button>
+          </form>
+        </div>
+      </div>
 
+      {/* Right Section - Illustration & Branding */}
+      <div className="w-1/2 flex flex-col justify-center items-center bg-[#F5F7FB] px-12">
+        <h2 className="text-2xl font-bold text-gray-900">Touch & Response</h2>
+        <p className="text-gray-500 mt-2">Stroke recovery, one touch at a time</p>
+        <img
+          src="/login_image.png" // Replace with actual image
+          alt="Login Illustration"
+          className="w-4/4 mt-8"
+        />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react"; 
+import { useState } from "react";
 import { registerUser } from "@/services/apiService";
 
 interface PatientModalProps {
@@ -17,12 +17,13 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Real-time validation error states
+  // Validation errors
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
-  const isValidPassword = (password: string) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
+  const isValidPassword = (password: string) =>
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,22 +51,23 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
 
   return (
     <div
-      className={`fixed inset-0 flex justify-center items-center transition-opacity ${
-        isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-      } bg-black bg-opacity-50`}
+      className={`fixed inset-0 flex items-center justify-center transition-opacity ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        } bg-black bg-opacity-50`}
     >
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-4">Add New Patient</h2>
+      <div className={`bg-white p-8 rounded-xl shadow-xl w-full max-w-lg transition-transform transform ${isOpen ? "scale-100" : "scale-95"
+        }`}>
+
+        <h2 className="text-2xl font-bold text-[#042d61] mb-6 text-center">Add New Patient</h2>
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Username Field */}
-          <div className="mb-4">
+          <div>
             <label className="block text-sm font-medium text-gray-700">Username</label>
             <input
               type="text"
-              className="mt-1 p-2 w-full border rounded-lg"
+              className="mt-1 p-3 w-full border border-gray-300 rounded-lg bg-gray-100 focus:ring-2 focus:ring-blue-500"
               placeholder="Enter patient name"
               value={username}
               onChange={(e) => {
@@ -73,14 +75,14 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
                 setUsernameError(e.target.value.length >= 3 ? "" : "Username must be at least 3 characters.");
               }}
             />
-            {usernameError && <p className="text-red-500 text-sm">{usernameError}</p>}
+            {usernameError && <p className="text-xs text-red-500 mt-1">{usernameError}</p>}
           </div>
 
           {/* Affected Limb Field */}
-          <div className="mb-4">
+          <div>
             <label className="block text-sm font-medium text-gray-700">Affected Limb</label>
             <select
-              className="mt-1 p-2 w-full border rounded-lg"
+              className="mt-1 p-3 w-full border border-gray-300 rounded-lg bg-gray-100 focus:ring-2 focus:ring-blue-500"
               value={affectedLimb}
               onChange={(e) => setAffectedLimb(e.target.value)}
             >
@@ -90,11 +92,11 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
           </div>
 
           {/* Password Field */}
-          <div className="mb-4">
+          <div>
             <label className="block text-sm font-medium text-gray-700">Password</label>
             <input
               type="password"
-              className="mt-1 p-2 w-full border rounded-lg"
+              className="mt-1 p-3 w-full border border-gray-300 rounded-lg bg-gray-100 focus:ring-2 focus:ring-blue-500"
               placeholder="Enter a password"
               value={password}
               onChange={(e) => {
@@ -102,41 +104,38 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
                 setPasswordError(isValidPassword(e.target.value) ? "" : "Must be 8+ characters, include 1 uppercase, 1 lowercase, 1 number.");
               }}
             />
-            {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
+            {passwordError && <p className="text-xs text-red-500 mt-1">{passwordError}</p>}
           </div>
 
           {/* Confirm Password Field */}
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm text-gray-700">Confirm Password</label>
+            <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
             <input
               type="password"
-              id="confirmPassword"
+              className="mt-1 p-3 w-full border border-gray-300 rounded-lg bg-gray-100 focus:ring-2 focus:ring-blue-500"
+              placeholder="Confirm your password"
               value={confirmPassword}
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
                 setConfirmPasswordError(e.target.value === password ? "" : "Passwords do not match.");
               }}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md"
-              placeholder="Confirm your password"
-              required
             />
             {confirmPasswordError && <p className="text-xs text-red-500 mt-1">{confirmPasswordError}</p>}
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end space-x-4 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              className="px-5 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-all"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className={`px-4 py-2 text-white rounded ${
-                loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
-              }`}
+              className={`px-6 py-2 text-white rounded-lg transition-all ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#042d61] hover:bg-[#1e487a]"
+                }`}
               disabled={loading || !!usernameError || !!passwordError || !username || !password}
             >
               {loading ? "Registering..." : "Add Patient"}
