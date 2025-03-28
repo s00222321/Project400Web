@@ -42,7 +42,6 @@ export default function RegisterPage() {
     try {
       const therapist = await registerTherapist(username, password, email);
       setSuccess("Registration successful! You can now log in.");
-      console.log("Registered:", therapist);
       
       const loginResponse = await loginTherapist(username, password);
       if ("error" in loginResponse) {

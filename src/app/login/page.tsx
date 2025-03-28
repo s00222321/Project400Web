@@ -25,8 +25,6 @@ export default function LoginPage() {
       setIsLoading(false);
       return;
     }
-
-    console.log("Logged in! Token: ", result.token);
     setToken(result.token);
     setIsLoggedIn(true);
     router.push("/dashboard");

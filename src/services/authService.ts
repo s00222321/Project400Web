@@ -43,7 +43,6 @@ export const loginTherapist = async (username: string, password: string): Promis
 // Function to register a therapist
 export const registerTherapist = async (username: string, password: string, email:string): Promise<Therapist> => {
     try {
-        console.log(username, password, email);
       const response = await fetch(`${API_URL}/auth/register-therapist`, {
         method: 'POST',
         headers: {
