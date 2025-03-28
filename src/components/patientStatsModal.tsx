@@ -28,8 +28,21 @@ interface Props {
   onClose: () => void;
 }
 
+interface TrendsData {
+  daily_average_reaction_time: Record<string, number>;
+  weekly_average_reaction_time: Record<string, number>;
+  descriptive_statistics: {
+    count: number;
+    mean: number;
+  };
+  game_mode_performance: {
+    game: number;
+    classic: number;
+  };
+}
+
 export default function PatientStatsModal({ patient, onClose }: Props) {
-  const [trends, setTrends] = useState<any>(null);
+  const [trends, setTrends] = useState<TrendsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedTrend, setSelectedTrend] = useState("daily");

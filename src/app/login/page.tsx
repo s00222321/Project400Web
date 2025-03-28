@@ -4,6 +4,7 @@ import { useAuth } from "@/context/authContext";
 import Link from "next/link";
 import { loginTherapist } from "@/services/authService";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -99,9 +100,11 @@ export default function LoginPage() {
       <div className="w-1/2 flex flex-col justify-center items-center bg-[#F5F7FB] px-12">
         <h2 className="text-2xl font-bold text-gray-900">Touch & Response</h2>
         <p className="text-gray-500 mt-2">Stroke recovery, one touch at a time</p>
-        <img
+        <Image
           src="/login_image.png" // Replace with actual image
           alt="Login Illustration"
+          width={400} // Set appropriate width
+          height={300} // Set appropriate height
           className="w-4/4 mt-8"
         />
       </div>

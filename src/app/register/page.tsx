@@ -4,11 +4,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/authContext";
 import { registerTherapist, loginTherapist } from "@/services/authService";
+import Image from "next/image";
 
 export default function RegisterPage() {
   const router = useRouter();
   const { setIsLoggedIn, setToken } = useAuth();
-  
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,9 +41,9 @@ export default function RegisterPage() {
     setIsSubmitting(true);
 
     try {
-      const therapist = await registerTherapist(username, password, email);
+      await registerTherapist(username, password, email);
       setSuccess("Registration successful! You can now log in.");
-      
+
       const loginResponse = await loginTherapist(username, password);
       if ("error" in loginResponse) {
         setError(loginResponse.error);
@@ -153,7 +154,7 @@ export default function RegisterPage() {
             <div className="flex justify-between text-sm">
               <span></span>
               <p className="mt-4 text-center">
-              Already have an account?{" "}
+                Already have an account?{" "}
                 <Link href="/login" className="text-[#5C9DF5] hover:underline">
                   Login here
                 </Link>
@@ -163,11 +164,10 @@ export default function RegisterPage() {
             {/* Register Button */}
             <button
               type="submit"
-              className={`w-full py-3 mt-4 text-white font-medium rounded-md transition-all ${
-                username && email && password && confirmPassword && !usernameError && !emailError && !passwordError && !confirmPasswordError
+              className={`w-full py-3 mt-4 text-white font-medium rounded-md transition-all ${username && email && password && confirmPassword && !usernameError && !emailError && !passwordError && !confirmPasswordError
                   ? "bg-[#042d61] hover:bg-[#1e487a]"
                   : "bg-gray-400 cursor-not-allowed"
-              }`}
+                }`}
               disabled={isSubmitting || !!usernameError || !!emailError || !!passwordError || !!confirmPasswordError}
             >
               {isSubmitting ? "Registering..." : "Sign Up"}
@@ -180,10 +180,12 @@ export default function RegisterPage() {
       <div className="w-1/2 flex flex-col justify-center items-center bg-[#F5F7FB] px-12">
         <h2 className="text-2xl font-bold text-gray-900">Touch & Response</h2>
         <p className="text-gray-500 mt-2">Stroke recovery, one touch at a time</p>
-        <img
-          src="/login_image.png" // Replace with actual image
+        <Image
+          src="/login_image.png" // Ensure this is in the public folder or an accessible path
           alt="Register Illustration"
-          className="w-4/4 mt-8"
+          width={500} // Adjust width as needed
+          height={400} // Adjust height as needed
+          priority // Helps with faster loading
         />
       </div>
     </div>
