@@ -11,11 +11,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!isLoggedIn) {
       
-      router.push("/login"); // Redirect if not logged in
+      router.push("/login"); // redirect if not logged in
     }
   }, [isLoggedIn, router]);
 
-  if (!isLoggedIn) return null; // Prevent rendering before redirecting
+  if (!isLoggedIn) return null; // prevent rendering before redirecting
 
   return <>{children}</>;
 };

@@ -20,7 +20,7 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<User | null>(null);
 
-  // Decode JWT token and set therapistId
+  // decode jwt token and set therapistid
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -33,14 +33,14 @@ export default function Dashboard() {
     }
   }, []);
 
-  // Fetch patients when therapistId is available
+  // fetch patients when therapistid is available
   useEffect(() => {
     async function loadPatients() {
       try {
         if (therapistId) {
           const data = await fetchPatients(therapistId);
           setPatients(data);
-          setFilteredPatients(data); // Set initial filtered state
+          setFilteredPatients(data); // set initial filtered state
         }
       } catch (error) {
         console.error("Error fetching patients:", error);
@@ -52,7 +52,7 @@ export default function Dashboard() {
     loadPatients();
   }, [therapistId]);
 
-  // Filter patients based on search query
+  // filter patients based on search query
   useEffect(() => {
     if (searchQuery.trim() === "") {
       setFilteredPatients(patients);
@@ -72,11 +72,11 @@ export default function Dashboard() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-[#F5F5F5] p-8">
-        {/* Header */}
+        {/* header */}
         <header className="mb-6 flex flex-col md:flex-row justify-between items-center">
           <h1 className="text-3xl font-bold text-[#042d61]">Stroke Recovery Dashboard</h1>
-          
-          {/* Search Box */}
+
+          {/* search box */}
           <input
             type="text"
             placeholder="Search patients..."
@@ -85,7 +85,7 @@ export default function Dashboard() {
             className="mt-4 md:mt-0 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1e487a] w-full md:w-1/3"
           />
 
-          {/* Add Patient Button */}
+          {/* add patient button */}
           <button
             onClick={openModal}
             className="mt-4 md:mt-0 bg-[#042d61] text-white px-6 py-2 rounded-lg hover:bg-[#1e487a] transition-all"
@@ -94,7 +94,7 @@ export default function Dashboard() {
           </button>
         </header>
 
-        {/* Patient List */}
+        {/* patient list */}
         <main className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {loading ? (
             <div className="flex justify-center items-center col-span-full">
@@ -116,7 +116,7 @@ export default function Dashboard() {
           )}
         </main>
 
-        {/* Modals */}
+        {/* modals */}
         <CreatePatientModal isOpen={isModalOpen} onClose={closeModal} therapistId={therapistId || ""} />
         {selectedPatient && <PatientStatsModal patient={selectedPatient} onClose={closeStatsModal} />}
       </div>

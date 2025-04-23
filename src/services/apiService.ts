@@ -12,6 +12,7 @@ export interface User {
     preferences: Preferences;
 }
 
+// function to register a user
 export const registerUser = async (username: string, password: string, therapistId: string, hand: string) => {
     try {
     const response = await fetch(`${API_URL}/user/register-user`, {
@@ -33,7 +34,7 @@ export const registerUser = async (username: string, password: string, therapist
   }
 };
 
-
+// function to fetch patients for a given therapist
 export const fetchPatients = async (therapistId: string): Promise<User[]> => {
     try {
         const response = await fetch(`${API_URL}/user/users/${therapistId}`);
@@ -48,7 +49,7 @@ export const fetchPatients = async (therapistId: string): Promise<User[]> => {
     }
 };
 
-
+// function to fetch actions for a given user	
 export const fetchActions = async (userId: string) => {
   try {
     const response = await fetch(`${API_URL}/data/get-actions/${userId}`);
@@ -59,10 +60,11 @@ export const fetchActions = async (userId: string) => {
     return data;
   } catch (error) {
     console.error("Error fetching actions:", error);
-    return { data: [] }; // Return empty data in case of error
+    return { data: [] };
   }
 };
 
+// function to fetch trends for a given user
 export const fetchTrends = async (userId: string) => {
   try {
     const response = await fetch(`${API_URL}/data/trends/${userId}`);
@@ -73,6 +75,6 @@ export const fetchTrends = async (userId: string) => {
     return data;
   } catch (error) {
     console.error("Error fetching trends:", error);
-    return { data: [] }; // Return empty data in case of error
+    return { data: [] };
   }
 };

@@ -13,8 +13,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { X } from "lucide-react"; // Importing an 'X' close icon
+import { X } from "lucide-react";
 
+// set up chart.ja
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 interface User {
@@ -92,13 +93,13 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
   return (
     <div 
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-      onClick={onClose} // Close modal when clicking outside
+      onClick={onClose} // close modal when clicking outside
     >
       <div 
         className="bg-white p-8 rounded-xl shadow-xl w-full max-w-2xl relative transition-transform transform scale-100"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+        onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside modal
       >
-        {/* Close Button (Small 'X' in the corner) */}
+        {/* close button */}
         <button 
           onClick={onClose} 
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
@@ -106,13 +107,13 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
           <X size={24} />
         </button>
 
-        {/* Title */}
+        {/* title */}
         <h2 className="text-3xl font-bold text-[#042d61] text-center">{patient.username}&apos;s Stats</h2>
         <p className="text-gray-600 text-center mt-2">
           Affected Limb: <span className="font-semibold">{patient.preferences.hand}</span>
         </p>
 
-        {/* Loading or Error Message */}
+        {/* loading or error message */}
         {loading ? (
           <div className="flex justify-center items-center mt-6">
             <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-opacity-50"></div>
@@ -121,7 +122,7 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
           <p className="text-gray-600 mt-4 text-center">{error}</p>
         ) : (
           <>
-            {/* Trend Selection Dropdown */}
+            {/* trend selection dropdown */}
             <div className="mt-4 flex justify-center">
               <label className="block text-lg font-semibold text-gray-700">
                 View Trend:
@@ -136,7 +137,7 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
               </label>
             </div>
 
-            {/* Chart Display */}
+            {/* chart display */}
             <div className="mt-6 w-full h-[350px] bg-gray-100 p-4 rounded-lg">
               <Line 
                 data={chartData} 
@@ -144,7 +145,7 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
               />
             </div>
 
-            {/* Key Insights */}
+            {/* key insights */}
             <div className="mt-6 p-4 bg-gray-100 rounded-lg">
               <h3 className="text-lg font-semibold text-gray-700">Performance Insights</h3>
               {trends ? (

@@ -10,26 +10,30 @@ interface PatientModalProps {
 }
 
 export default function CreatePatientModal({ isOpen, onClose, therapistId }: PatientModalProps) {
+  // state hooks for form fields
   const [username, setUsername] = useState("");
   const [affectedLimb, setAffectedLimb] = useState("Left");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  // state for general error and loading feedback
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Validation errors
+  // state for individual field validation messages
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
+  // simple password validation regex
   const isValidPassword = (password: string) =>
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // prevent page reload
     setError("");
 
-    // Final validation before submitting
+    // validation before submitting
     if (!username) return setUsernameError("Username is required.");
     if (!isValidPassword(password)) return setPasswordError("Must be 8+ characters, include 1 uppercase, 1 lowercase, and 1 number.");
     if (password !== confirmPassword) return setConfirmPasswordError("Passwords do not match.");
@@ -62,7 +66,7 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Username Field */}
+          {/* username field */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Username</label>
             <input
@@ -78,7 +82,7 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
             {usernameError && <p className="text-xs text-red-500 mt-1">{usernameError}</p>}
           </div>
 
-          {/* Affected Limb Field */}
+          {/* affected limb field */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Affected Limb</label>
             <select
@@ -91,7 +95,7 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
             </select>
           </div>
 
-          {/* Password Field */}
+          {/* password field */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Password</label>
             <input
@@ -107,7 +111,7 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
             {passwordError && <p className="text-xs text-red-500 mt-1">{passwordError}</p>}
           </div>
 
-          {/* Confirm Password Field */}
+          {/* confirm password field */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
             <input
@@ -123,7 +127,7 @@ export default function CreatePatientModal({ isOpen, onClose, therapistId }: Pat
             {confirmPasswordError && <p className="text-xs text-red-500 mt-1">{confirmPasswordError}</p>}
           </div>
 
-          {/* Buttons */}
+          {/* buttons */}
           <div className="flex justify-end space-x-4 mt-6">
             <button
               type="button"

@@ -11,12 +11,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setIsLoggedIn, setToken } = useAuth();
+  const { login } = useAuth();
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(""); // Reset previous errors
+    setError(""); // reset previous errors
     setIsLoading(true);
 
     const result = await loginTherapist(username, password);
@@ -26,20 +26,19 @@ export default function LoginPage() {
       setIsLoading(false);
       return;
     }
-    setToken(result.token);
-    setIsLoggedIn(true);
+    login(result.token); // store the token in session storage
     router.push("/dashboard");
   };
 
   return (
     <div className="flex min-h-screen">
-      {/* Left Section - Login Form */}
+      {/* left section - login form */}
       <div className="w-1/2 flex items-center justify-center bg-white p-12 rounded-lg">
         <div className="w-full max-w-md">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
           <p className="text-gray-500 mb-6">Please enter your details</p>
 
-          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+          {error && <p className="text-red-500 text-center mb-4" aria-live="assertive">{error}</p>}
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
@@ -96,15 +95,15 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right Section - Illustration & Branding */}
+      {/* right section - illustration & branding */}
       <div className="w-1/2 flex flex-col justify-center items-center bg-[#F5F7FB] px-12">
         <h2 className="text-2xl font-bold text-gray-900">Touch & Response</h2>
         <p className="text-gray-500 mt-2">Stroke recovery, one touch at a time</p>
         <Image
-          src="/login_image.png" // Replace with actual image
+          src="/login_image.png"
           alt="Login Illustration"
-          width={400} // Set appropriate width
-          height={300} // Set appropriate height
+          width={400} 
+          height={300}
           className="w-4/4 mt-8"
         />
       </div>

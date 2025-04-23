@@ -8,8 +8,9 @@ import Image from "next/image";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { setIsLoggedIn, setToken } = useAuth();
+  const { login } = useAuth();
 
+  // state for form fields, messages, submission status, and validation errors
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,12 +19,13 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Validation errors
+  // validation errors
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
+  // simple regex validators
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isValidPassword = (password: string) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password);
 
@@ -32,7 +34,7 @@ export default function RegisterPage() {
     setError("");
     setSuccess("");
 
-    // Validation checks
+    // input validation
     if (!username) return setUsernameError("Username is required.");
     if (!isValidEmail(email)) return setEmailError("Invalid email format.");
     if (!isValidPassword(password)) return setPasswordError("Must be 8+ characters, include 1 uppercase, 1 lowercase, and 1 number.");
@@ -44,13 +46,13 @@ export default function RegisterPage() {
       await registerTherapist(username, password, email);
       setSuccess("Registration successful! You can now log in.");
 
+      // auto-login user after successful registration
       const loginResponse = await loginTherapist(username, password);
       if ("error" in loginResponse) {
         setError(loginResponse.error);
       } else {
-        setToken(loginResponse.token);
-        setIsLoggedIn(true);
-        router.push("/dashboard"); // Redirect on success
+        login(loginResponse.token);
+        router.push("/dashboard"); // redirect on success
       }
     } catch (err) {
       setError("Registration failed. Please try again." + err);
@@ -61,17 +63,18 @@ export default function RegisterPage() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Left Section - Register Form */}
+      {/* left section - register form */}
       <div className="w-1/2 flex items-center justify-center bg-white p-12 rounded-lg">
         <div className="w-full max-w-md">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Create an Account</h2>
           <p className="text-gray-500 mb-6">Please enter your details</p>
 
+          {/* display error/success messages */}
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           {success && <p className="text-green-500 text-center mb-4">{success}</p>}
 
           <form onSubmit={handleRegister} className="space-y-4">
-            {/* Username Field */}
+            {/* username field */}
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                 Username
@@ -91,7 +94,7 @@ export default function RegisterPage() {
               {usernameError && <p className="text-xs text-red-500 mt-1">{usernameError}</p>}
             </div>
 
-            {/* Email Field */}
+            {/* email field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email Address
@@ -111,7 +114,7 @@ export default function RegisterPage() {
               {emailError && <p className="text-xs text-red-500 mt-1">{emailError}</p>}
             </div>
 
-            {/* Password Field */}
+            {/* password field */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
@@ -131,7 +134,7 @@ export default function RegisterPage() {
               {passwordError && <p className="text-xs text-red-500 mt-1">{passwordError}</p>}
             </div>
 
-            {/* Confirm Password Field */}
+            {/* confirm password field */}
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                 Confirm Password
@@ -161,12 +164,12 @@ export default function RegisterPage() {
               </p>
             </div>
 
-            {/* Register Button */}
+            {/* register button */}
             <button
               type="submit"
               className={`w-full py-3 mt-4 text-white font-medium rounded-md transition-all ${username && email && password && confirmPassword && !usernameError && !emailError && !passwordError && !confirmPasswordError
-                  ? "bg-[#042d61] hover:bg-[#1e487a]"
-                  : "bg-gray-400 cursor-not-allowed"
+                ? "bg-[#042d61] hover:bg-[#1e487a]"
+                : "bg-gray-400 cursor-not-allowed"
                 }`}
               disabled={isSubmitting || !!usernameError || !!emailError || !!passwordError || !!confirmPasswordError}
             >
@@ -176,16 +179,16 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* Right Section - Illustration & Branding */}
+      {/* right section - illustration & branding */}
       <div className="w-1/2 flex flex-col justify-center items-center bg-[#F5F7FB] px-12">
         <h2 className="text-2xl font-bold text-gray-900">Touch & Response</h2>
         <p className="text-gray-500 mt-2">Stroke recovery, one touch at a time</p>
         <Image
-          src="/login_image.png" // Ensure this is in the public folder or an accessible path
+          src="/login_image.png" 
           alt="Register Illustration"
-          width={500} // Adjust width as needed
-          height={400} // Adjust height as needed
-          priority // Helps with faster loading
+          width={500} 
+          height={400} 
+          priority 
         />
       </div>
     </div>
