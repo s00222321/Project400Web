@@ -22,7 +22,7 @@ export default function Dashboard() {
 
   // decode jwt token and set therapistid
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token) {
       try {
         const decodedToken = jwtDecode<DecodedJWT>(token);
@@ -33,22 +33,22 @@ export default function Dashboard() {
     }
   }, []);
 
+  const loadPatients = async () => {
+    try {
+      if (therapistId) {
+        const data = await fetchPatients(therapistId);
+        setPatients(data);
+        setFilteredPatients(data); // set initial filtered state
+      }
+    } catch (error) {
+      console.error("Error fetching patients:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // fetch patients when therapistid is available
   useEffect(() => {
-    async function loadPatients() {
-      try {
-        if (therapistId) {
-          const data = await fetchPatients(therapistId);
-          setPatients(data);
-          setFilteredPatients(data); // set initial filtered state
-        }
-      } catch (error) {
-        console.error("Error fetching patients:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     loadPatients();
   }, [therapistId]);
 
@@ -65,7 +65,10 @@ export default function Dashboard() {
   }, [searchQuery, patients]);
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    loadPatients();
+  };  
   const openStatsModal = (patient: User) => setSelectedPatient(patient);
   const closeStatsModal = () => setSelectedPatient(null);
 

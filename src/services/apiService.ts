@@ -29,7 +29,7 @@ export const registerUser = async (username: string, password: string, therapist
 
     return await response.json();
   } catch (error) {
-    console.error("Error registering user:", error);
+    console.error(error);
     throw error;
   }
 };
@@ -44,7 +44,7 @@ export const fetchPatients = async (therapistId: string): Promise<User[]> => {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error("Error fetching patients:", error);
+        console.error(error);
         return [];
     }
 };
@@ -59,7 +59,7 @@ export const fetchActions = async (userId: string) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching actions:", error);
+    console.error(error);
     return { data: [] };
   }
 };
@@ -74,7 +74,7 @@ export const fetchTrends = async (userId: string) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching trends:", error);
+    console.error(error);
     return { data: [] };
   }
 };

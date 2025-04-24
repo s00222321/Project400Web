@@ -51,7 +51,6 @@ export default function PatientStatsModal({ patient, onClose }: Props) {
   useEffect(() => {
     fetchTrends(patient._id)
       .then((res) => {
-        console.log("Fetched Trends:", res);
         if (res.error) {
           setError("No data available for this patient.");
         } else {
